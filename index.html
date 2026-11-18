@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Библиотека 3D скинов -->
+  <script src="https://unpkg.com/skinview3d@3.f.iv/bundles/skinview3d.bundle.js"></script>
+
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #05080f 70%);
@@ -77,7 +80,7 @@
 
     .nav-pill {
       color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
-      padding: 6px 18px; border-radius: 999px; transition: all 0.25s ease; cursor: pointer;
+      padding: 6px 16px; border-radius: 999px; transition: all 0.25s ease; cursor: pointer;
       display: flex; align-items: center; gap: 6px;
     }
 
@@ -102,7 +105,6 @@
     .glass-btn:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-hover); transform: translateY(-2px); }
     .glass-btn.primary { background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.1)); border-color: rgba(56, 189, 248, 0.4); color: #bae6fd; }
     .glass-btn.lg { padding: 14px 28px; font-size: 1rem; }
-    .glass-btn.block { width: 100%; }
 
     /* Панели */
     .glass-panel {
@@ -133,8 +135,17 @@
     .hero-title { font-size: 3rem; line-height: 1.1; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; }
     .gradient-text { background: linear-gradient(90deg, #7dd3fc, #38bdf8, #bae6fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero-subtitle { color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 28px; }
-    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
     .copy-tag { font-size: 0.72rem; background: rgba(0, 0, 0, 0.4); padding: 2px 8px; border-radius: 6px; color: var(--text-muted); }
+
+    /* Плеер эмбиента */
+    .ambient-player {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 10px 18px; border-radius: 999px; cursor: pointer; transition: 0.3s;
+      font-size: 0.9rem; font-weight: 600; color: var(--accent);
+    }
+    .ambient-player:hover { background: rgba(56, 189, 248, 0.2); }
 
     /* Статус панель */
     .status-panel { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-radius: 20px; margin-bottom: 30px; flex-wrap: wrap; gap: 16px; }
@@ -156,12 +167,29 @@
     .info-card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
     .info-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
 
-    /* Стили для форума */
+    /* Дорожная карта (Roadmap) */
+    .roadmap-list { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+    .roadmap-item { background: rgba(0,0,0,0.25); border: 1px solid var(--glass-border); padding: 18px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .roadmap-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .roadmap-desc { color: var(--text-muted); font-size: 0.85rem; }
+    .status-badge { padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .status-badge.done { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-badge.progress { background: rgba(56, 189, 248, 0.15); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.3); }
+
+    /* Команда проекта 3D */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+    .team-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; text-align: center; backdrop-filter: blur(16px); display: flex; flex-direction: column; align-items: center; }
+    .team-skin { width: 120px; height: 180px; margin-bottom: 14px; }
+    .team-skin canvas { width: 120px !important; height: 180px !important; outline: none; }
+    .team-name { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .team-role { font-size: 0.8rem; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 3px 10px; border-radius: 999px; }
+
+    /* Форум */
     .forum-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
     .glass-input, .glass-textarea {
       background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border);
       padding: 12px 16px; border-radius: 14px; color: var(--text-main);
-      font-family: inherit; font-size: 0.95netrem; outline: none; width: 100%; transition: 0.3s;
+      font-family: inherit; font-size: 0.95rem; outline: none; width: 100%; transition: 0.3s;
     }
     .glass-textarea { resize: vertical; min-height: 100px; }
     .glass-input:focus, .glass-textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
@@ -206,6 +234,7 @@
         <a class="nav-pill active" onclick="switchTab('home')" id="nav-home">Главная</a>
         <a class="nav-pill" onclick="switchTab('assembly')" id="nav-assembly">Сборка</a>
         <a class="nav-pill" onclick="switchTab('rules')" id="nav-rules">Правила</a>
+        <a class="nav-pill" onclick="switchTab('team')" id="nav-team">Команда</a>
         <a class="nav-pill" onclick="switchTab('forum')" id="nav-forum">Форум <span class="beta-badge">BETA</span></a>
       </div>
     </nav>
@@ -230,11 +259,14 @@
               <span id="ip-text">play.harshwinters.ru</span>
               <span class="copy-tag" id="copy-status">КОПИРОВАТЬ IP</span>
             </button>
-            <a href="#install" class="glass-btn lg" onclick="switchTab('assembly')">О сборке</a>
+            <div class="ambient-player" id="ambient-btn" onclick="toggleAmbientAudio()">
+              🎵 <span id="ambient-text">Включить зимний эмбиент</span>
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- Статус сервера -->
       <div class="glass-panel status-panel">
         <div class="status-info">
           <span class="pulse-dot" id="status-dot"></span>
@@ -252,17 +284,40 @@
         </div>
       </div>
 
-      <div class="glass-panel">
-        <h2 style="margin-bottom: 14px; font-size: 1.4rem;" class="gradient-text">О СЕРВЕРЕ</h2>
-        <p style="color: var(--text-muted); line-height: 1.7; font-size: 1rem;">
-          Harsh Winters — это атмосферный сервер с уклоном в выживание и хардкор. Здесь важны командная работа, постройка защищенных убежищ и грамотное распределение ресурсов. Исследуйте заснеженные биомы, создавайте механизированные базы и сражайтесь с суровой природой.
-        </p>
+      <!-- Дорожная карта (Roadmap) -->
+      <div class="glass-panel" style="margin-bottom: 50px;">
+        <h2 style="margin-bottom: 6px; font-size: 1.4rem;" class="gradient-text">🗺️ Дорожная карта проекта</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Этапы разработки и запуска нашего хардкорного сервера.</p>
+        
+        <div class="roadmap-list">
+          <div class="roadmap-item">
+            <div>
+              <div class="roadmap-title">Базовая сборка модов (Cold Sweat, Weather2, Create)</div>
+              <div class="roadmap-desc">Интеграция механик температуры и погоды в единый баланс.</div>
+            </div>
+            <span class="status-badge done">Готово (100%)</span>
+          </div>
+          <div class="roadmap-item">
+            <div>
+              <div class="roadmap-title">Оптимизация сервера и квестов</div>
+              <div class="roadmap-desc">Настройка серверного ядра, лаунчера и стартовых квестов выживания.</div>
+            </div>
+            <span class="status-badge progress">В процессе (85%)</span>
+          </div>
+          <div class="roadmap-item">
+            <div>
+              <div class="roadmap-title">Закрытое ЗБТ и открытие релиза</div>
+              <div class="roadmap-desc">Финальный запуск сервера для всех игроков.</div>
+            </div>
+            <span class="status-badge progress">Скоро</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 2. СТРАНИЦА СБОРКИ -->
     <div id="view-assembly" class="page-view">
-      <div class="glass-panel" style="margin-top: 40px;">
+      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
         <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Сборка Harsh Winters 1.0.0</h2>
         <p style="color: var(--text-muted); margin-bottom: 24px;">Основные модификации, формирующие уникальный зимний игровой процесс.</p>
         
@@ -289,7 +344,7 @@
 
     <!-- 3. СТРАНИЦА ПРАВИЛ -->
     <div id="view-rules" class="page-view">
-      <div class="glass-panel" style="margin-top: 40px;">
+      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
         <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Правила сервера</h2>
         <p style="color: var(--text-muted); margin-bottom: 24px;">Соблюдение регламента гарантирует комфортную и честную игру для каждого.</p>
         
@@ -310,13 +365,33 @@
       </div>
     </div>
 
-    <!-- 4. ФОРУМ / ИСТОРИИ [BETA] -->
+    <!-- 4. КОМАНДА ПРОЕКТА (3D Скины) -->
+    <div id="view-team" class="page-view">
+      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
+        <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Команда проекта</h2>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">Люди, которые создают и поддерживают атмосферу Harsh Winters.</p>
+        
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-skin" id="skin-dev1"></div>
+            <div class="team-name">Shkaf1k</div>
+            <div class="team-role">Основатель & Разработчик</div>
+          </div>
+          <div class="team-card">
+            <div class="team-skin" id="skin-dev2"></div>
+            <div class="team-name">NordicWolf</div>
+            <div class="team-role">Главный билдер</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ФОРУМ / ИСТОРИИ [BETA] -->
     <div id="view-forum" class="page-view">
-      <div class="glass-panel" style="margin-top: 40px;">
+      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
         <h2 style="font-size: 2rem; margin-bottom: 6px;" class="gradient-text">Форум выживших <span class="beta-badge">BETA</span></h2>
         <p style="color: var(--text-muted); margin-bottom: 24px;">Делитесь скриншотами своих баз, историями спасения от метели и приключениями.</p>
         
-        <!-- Форма добавления поста -->
         <form onsubmit="handleForumPost(event)" class="forum-form">
           <input type="text" id="forum-author" placeholder="Ваш ник в игре" required class="glass-input" />
           <textarea id="forum-text" placeholder="Расскажите историю или опишите свой скриншот..." required class="glass-textarea"></textarea>
@@ -326,10 +401,7 @@
 
         <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 30px 0;" />
 
-        <!-- Лента постов -->
-        <div id="forum-posts-container">
-          <!-- Сюда динамически добавляются посты -->
-        </div>
+        <div id="forum-posts-container"></div>
       </div>
     </div>
 
@@ -337,8 +409,30 @@
 
   <div id="toast" class="glass-toast"></div>
 
+  <!-- Скрытый аудиоэлемент для атмосферного эмбиента (белый шум / зимняя метель) -->
+  <audio id="ambient-audio" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13348f9.mp3?filename=wind-howling-10499.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
     const SERVER_IP = 'play.harshwinters.ru';
+    let isAudioPlaying = false;
+
+    function toggleAmbientAudio() {
+      const audio = document.getElementById('ambient-audio');
+      const btnText = document.getElementById('ambient-text');
+      if (!isAudioPlaying) {
+        audio.play().catch(() => {});
+        btnText.textContent = 'Выключить зимний эмбиент';
+        isAudioPlaying = true;
+        showToast('❄ Зимний эмбиент включен');
+      } else {
+        audio.pause();
+        btnText.textContent = 'Включить зимний эмбиент';
+        isAudioPlaying = false;
+        showToast('🔇 Эмбиент выключен');
+      }
+    }
 
     function switchTab(tabId) {
       document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
@@ -353,11 +447,48 @@
       } else if (tabId === 'rules') {
         document.getElementById('view-rules').classList.add('active');
         document.getElementById('nav-rules').classList.add('active');
+      } else if (tabId === 'team') {
+        document.getElementById('view-team').classList.add('active');
+        document.getElementById('nav-team').classList.add('active');
+        initTeamSkins(); // Рендерим 3D скины команды при открытии вкладки
       } else if (tabId === 'forum') {
         document.getElementById('view-forum').classList.add('active');
         document.getElementById('nav-forum').classList.add('active');
       }
       window.scrollTo(0, 0);
+    }
+
+    // Рендер 3D скинов команды
+    let teamRendered = false;
+    function initTeamSkins() {
+      if (teamRendered) return;
+      teamRendered = true;
+
+      try {
+        const viewer1 = new skinview3d.SkinViewer({
+          canvas: document.createElement("canvas"),
+          width: 120, height: 180,
+          skin: "https://mc-heads.net/skin/Shkaf1k",
+          cape: "https://mc-heads.net/cape/Shkaf1k"
+        });
+        viewer1.controls.enableRotate = true;
+        viewer1.controls.enableZoom = false;
+        viewer1.animation = new skinview3d.WalkingAnimation();
+        viewer1.animation.speed = 0.4;
+        document.getElementById('skin-dev1').appendChild(viewer1.canvas);
+
+        const viewer2 = new skinview3d.SkinViewer({
+          canvas: document.createElement("canvas"),
+          width: 120, height: 180,
+          skin: "https://mc-heads.net/skin/NordicWolf",
+          cape: "https://mc-heads.net/cape/NordicWolf"
+        });
+        viewer2.controls.enableRotate = true;
+        viewer2.controls.enableZoom = false;
+        viewer2.animation = new skinview3d.WalkingAnimation();
+        viewer2.animation.speed = 0.4;
+        document.getElementById('skin-dev2').appendChild(viewer2.canvas);
+      } catch (e) {}
     }
 
     const canvas = document.getElementById('snow-canvas');
@@ -426,12 +557,10 @@
     }
     fetchServerStatus();
 
-    // Логика форума (сохранение в localStorage)
     function loadForumPosts() {
       const container = document.getElementById('forum-posts-container');
       let posts = JSON.parse(localStorage.getItem('hw_forum_posts') || '[]');
       
-      // Дефолтный пост для примера, если лента пуста
       if (posts.length === 0) {
         posts = [
           {
@@ -472,7 +601,7 @@
       };
 
       let posts = JSON.parse(localStorage.getItem('hw_forum_posts') || '[]');
-      posts.unshift(newPost); // Добавляем в начало
+      posts.unshift(newPost);
       localStorage.setItem('hw_forum_posts', JSON.stringify(posts));
 
       document.getElementById('forum-text').value = '';
@@ -482,7 +611,6 @@
       showToast('✔ Ваша история успешно опубликована!');
     }
 
-    // Защита от кривого ввода
     function escapeHtml(str) {
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
