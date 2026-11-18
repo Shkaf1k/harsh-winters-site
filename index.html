@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HARSH WINTERS 1.0.0 — Хардкорный Minecraft Сервер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="snow-canvas"></canvas>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <span class="logo-icon">❄</span>
+        <div class="logo-text">
+          <span class="brand">HARSH WINTERS</span>
+          <span class="version-badge">MODPACK 1.0.0</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#features">О сборке</a>
+        <a href="#mods">Моды</a>
+        <a href="#install">Как начать играть</a>
+        <a href="#rules">Правила</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="auth-header-area">
+          <button class="btn btn-primary btn-sm" onclick="openAuthModal()">
+            ❄ Личный кабинет
+          </button>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Меню">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="season-tag">🔥 СЕЗОН 1: ВЕЧНАЯ МЕРЗЛОТА • ТОЛЬКО ЛИЦЕНЗИЯ</div>
+          <h1 class="hero-title">ВЫЖИВИ В ЛЕДЯНОМ АДУ <span class="ice-gradient">HARSH WINTERS</span></h1>
+          <p class="hero-subtitle">
+            Хардкорная сборка <strong>Harsh Winters 1.0.0</strong> на базе Minecraft 1.20.1. 
+            Температура тела, снежные бури, обморожение, истощение ресурсов и суровые PvP/PvE испытания.
+          </p>
+
+          <div class="hero-buttons">
+            <button class="btn btn-ice btn-lg" onclick="copyIP()">
+              <span id="ip-text">play.harshwinters.ru</span>
+              <span class="copy-badge" id="copy-status">КОПИРОВАТЬ IP</span>
+            </button>
+            <a href="#install" class="btn btn-outline btn-lg">⬇ Скачать сборку (v1.0.0)</a>
+          </div>
+
+          <div class="server-status-card">
+            <div class="status-indicator">
+              <span class="pulse-dot" id="status-dot"></span>
+              <div>
+                <div class="status-label" id="server-state-text">Проверка сервера...</div>
+                <div class="status-version">1.20.1 Forge • Harsh Winters 1.0.0</div>
+              </div>
+            </div>
+            <div class="status-metrics">
+              <div class="metric"><span class="metric-value" id="players-count">-- / --</span><span class="metric-name">Игроков</span></div>
+              <div class="metric-divider"></div>
+              <div class="metric"><span class="metric-value" id="server-ping">-- ms</span><span class="metric-name">Пинг</span></div>
+              <div class="metric-divider"></div>
+              <div class="metric"><span class="metric-value temp-cold">-38°C</span><span class="metric-name">Погода</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-sidebar">
+          <div class="glass-card auth-box" id="guest-card">
+            <div class="card-header">
+              <h3>ЛИЧНЫЙ КАБИНЕТ</h3>
+              <span class="badge-license">LICENSE ONLY</span>
+            </div>
+            <p class="auth-desc">Введите ваш официальный никнейм Minecraft для проверки лицензии Mojang и загрузки скина:</p>
+            <form onsubmit="checkMojangLicense(event)" style="display:flex;flex-direction:column;gap:12px;">
+              <input type="text" id="mc-username-input" placeholder="Введите никнейм" required style="padding:12px 14px;border-radius:8px;border:1px solid rgba(56,189,248,0.35);background:rgba(7,11,18,0.8);color:#fff;outline:none;" />
+              <button type="submit" id="verify-btn" class="btn btn-microsoft btn-block">Проверить лицензию и войти</button>
+            </form>
+            <div id="auth-error-banner" class="alert-error hidden"></div>
+          </div>
+
+          <div class="glass-card profile-box hidden" id="profile-card">
+            <div class="card-header">
+              <h3>ПРОФИЛЬ ВЫЖИВШЕГО</h3>
+              <span class="badge-verified">✔ ЛИЦЕНЗИОННЫЙ ИГРОК</span>
+            </div>
+            <div class="profile-main">
+              <img id="user-skin-render" src="" alt="Скин" class="skin-render" />
+              <div class="profile-info">
+                <h4 id="user-nickname" class="player-nick">Player</h4>
+                <p class="player-uuid" id="user-uuid">UUID: ...</p>
+                <div class="profile-stats">
+                  <div class="p-stat"><span>Вайтлист:</span> <strong class="text-ice">Подтвержден</strong></div>
+                  <div class="p-stat"><span>Вход:</span> <strong id="user-login-time">12:00</strong></div>
+                </div>
+              </div>
+            </div>
+            <div class="profile-actions">
+              <button class="btn btn-ice btn-block" onclick="copyIP()">Играть на сервере</button>
+              <button class="btn btn-ghost btn-block" onclick="logout()">Выйти</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
