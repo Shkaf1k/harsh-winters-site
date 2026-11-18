@@ -6,117 +6,103 @@
   <title>HARSH WINTERS 1.0.0 — Хардкорный Minecraft Сервер</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <canvas id="snow-canvas"></canvas>
 
-  <header class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="logo">
+  <!-- Плавающая стеклянная навигация (Glass Navbar) -->
+  <header class="floating-nav-container">
+    <nav class="glass-nav">
+      <a href="#" class="nav-logo">
         <span class="logo-icon">❄</span>
-        <div class="logo-text">
-          <span class="brand">HARSH WINTERS</span>
-          <span class="version-badge">MODPACK 1.0.0</span>
-        </div>
+        <span class="brand-name">HARSH WINTERS</span>
       </a>
-
-      <nav class="nav-links" id="nav-links">
-        <a href="#features">О сборке</a>
-        <a href="#mods">Моды</a>
-        <a href="#install">Как начать играть</a>
-        <a href="#rules">Правила</a>
-      </nav>
-
-      <div class="nav-actions">
-        <div id="auth-header-area">
-          <button class="btn btn-primary btn-sm" onclick="openAuthModal()">
-            ❄ Личный кабинет
-          </button>
-        </div>
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Меню">☰</button>
+      
+      <div class="nav-links">
+        <a href="#features" class="nav-pill active">О сборке</a>
+        <a href="#mods" class="nav-pill">Моды</a>
+        <a href="#install" class="nav-pill">Установка</a>
+        <a href="#rules" class="nav-pill">Правила</a>
       </div>
-    </div>
+
+      <div class="nav-auth" id="auth-header-area">
+        <button class="glass-btn sm" onclick="openAuthModal()">Войти</button>
+      </div>
+    </nav>
   </header>
 
-  <main>
+  <main class="container">
     <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <div class="season-tag">🔥 СЕЗОН 1: ВЕЧНАЯ МЕРЗЛОТА • ТОЛЬКО ЛИЦЕНЗИЯ</div>
-          <h1 class="hero-title">ВЫЖИВИ В ЛЕДЯНОМ АДУ <span class="ice-gradient">HARSH WINTERS</span></h1>
-          <p class="hero-subtitle">
-            Хардкорная сборка <strong>Harsh Winters 1.0.0</strong> на базе Minecraft 1.20.1. 
-            Температура тела, снежные бури, обморожение, истощение ресурсов и суровые PvP/PvE испытания.
-          </p>
+      <div class="hero-content">
+        <div class="season-badge">
+          <span class="dot-live"></span> СЕЗОН 1: ВЕЧНАЯ МЕРЗЛОТА
+        </div>
+        <h1 class="hero-title">ВЫЖИВИ В ЛЕДЯНОМ АДУ <span class="gradient-text">HARSH WINTERS</span></h1>
+        <p class="hero-subtitle">
+          Хардкорная сборка 1.20.1 Forge. Температура тела, снежные бури, обморожение и суровые испытания. Только для лицензионных игроков.
+        </p>
 
-          <div class="hero-buttons">
-            <button class="btn btn-ice btn-lg" onclick="copyIP()">
-              <span id="ip-text">play.harshwinters.ru</span>
-              <span class="copy-badge" id="copy-status">КОПИРОВАТЬ IP</span>
-            </button>
-            <a href="#install" class="btn btn-outline btn-lg">⬇ Скачать сборку (v1.0.0)</a>
-          </div>
-
-          <div class="server-status-card">
-            <div class="status-indicator">
-              <span class="pulse-dot" id="status-dot"></span>
-              <div>
-                <div class="status-label" id="server-state-text">Проверка сервера...</div>
-                <div class="status-version">1.20.1 Forge • Harsh Winters 1.0.0</div>
-              </div>
-            </div>
-            <div class="status-metrics">
-              <div class="metric"><span class="metric-value" id="players-count">-- / --</span><span class="metric-name">Игроков</span></div>
-              <div class="metric-divider"></div>
-              <div class="metric"><span class="metric-value" id="server-ping">-- ms</span><span class="metric-name">Пинг</span></div>
-              <div class="metric-divider"></div>
-              <div class="metric"><span class="metric-value temp-cold">-38°C</span><span class="metric-name">Погода</span></div>
-            </div>
-          </div>
+        <div class="hero-actions">
+          <button class="glass-btn primary lg" onclick="copyIP()">
+            <span id="ip-text">play.harshwinters.ru</span>
+            <span class="copy-tag" id="copy-status">КОПИРОВАТЬ IP</span>
+          </button>
+          <a href="#install" class="glass-btn lg">Скачать модпак</a>
         </div>
 
-        <div class="hero-sidebar">
-          <div class="glass-card auth-box" id="guest-card">
-            <div class="card-header">
-              <h3>ЛИЧНЫЙ КАБИНЕТ</h3>
-              <span class="badge-license">LICENSE ONLY</span>
+        <!-- Статус сервера -->
+        <div class="glass-panel status-panel">
+          <div class="status-info">
+            <span class="pulse-dot" id="status-dot"></span>
+            <div>
+              <div class="status-title" id="server-state-text">Сервер онлайн</div>
+              <div class="status-sub">1.20.1 Forge • Harsh Winters 1.0.0</div>
             </div>
-            <p class="auth-desc">Введите ваш официальный никнейм Minecraft для проверки лицензии Mojang и загрузки скина:</p>
-            <form onsubmit="checkMojangLicense(event)" style="display:flex;flex-direction:column;gap:12px;">
-              <input type="text" id="mc-username-input" placeholder="Введите никнейм" required style="padding:12px 14px;border-radius:8px;border:1px solid rgba(56,189,248,0.35);background:rgba(7,11,18,0.8);color:#fff;outline:none;" />
-              <button type="submit" id="verify-btn" class="btn btn-microsoft btn-block">Проверить лицензию и войти</button>
-            </form>
-            <div id="auth-error-banner" class="alert-error hidden"></div>
           </div>
+          <div class="status-metrics">
+            <div class="metric"><span id="players-count">-- / --</span><small>Игроков</small></div>
+            <div class="metric-divider"></div>
+            <div class="metric"><span id="server-ping">-- ms</span><small>Пинг</small></div>
+            <div class="metric-divider"></div>
+            <div class="metric"><span class="temp">-38°C</span><small>Погода</small></div>
+          </div>
+        </div>
+      </div>
 
-          <div class="glass-card profile-box hidden" id="profile-card">
-            <div class="card-header">
-              <h3>ПРОФИЛЬ ВЫЖИВШЕГО</h3>
-              <span class="badge-verified">✔ ЛИЦЕНЗИОННЫЙ ИГРОК</span>
-            </div>
-            <div class="profile-main">
-              <img id="user-skin-render" src="" alt="Скин" class="skin-render" />
-              <div class="profile-info">
-                <h4 id="user-nickname" class="player-nick">Player</h4>
-                <p class="player-uuid" id="user-uuid">UUID: ...</p>
-                <div class="profile-stats">
-                  <div class="p-stat"><span>Вайтлист:</span> <strong class="text-ice">Подтвержден</strong></div>
-                  <div class="p-stat"><span>Вход:</span> <strong id="user-login-time">12:00</strong></div>
-                </div>
-              </div>
-            </div>
-            <div class="profile-actions">
-              <button class="btn btn-ice btn-block" onclick="copyIP()">Играть на сервере</button>
-              <button class="btn btn-ghost btn-block" onclick="logout()">Выйти</button>
+      <!-- Блок авторизации / Личный кабинет -->
+      <div class="hero-sidebar">
+        <div class="glass-panel auth-card" id="guest-card">
+          <h3>ЛИЧНЫЙ КАБИНЕТ</h3>
+          <p class="card-desc">Введите ваш никнейм Minecraft для проверки лицензии Mojang и доступа к серверу:</p>
+          <form onsubmit="checkMojangLicense(event)" class="auth-form">
+            <input type="text" id="mc-username-input" placeholder="Ваш ник (например, Notch)" required class="glass-input" />
+            <button type="submit" id="verify-btn" class="glass-btn primary block">Проверить лицензию</button>
+          </form>
+          <div id="auth-error-banner" class="glass-alert hidden"></div>
+        </div>
+
+        <div class="glass-panel profile-card hidden" id="profile-card">
+          <div class="profile-header">
+            <h3>ПРОФИЛЬ</h3>
+            <span class="badge-success">✔ Лицензия</span>
+          </div>
+          <div class="profile-body">
+            <img id="user-skin-render" src="" alt="Скин" class="skin-img" />
+            <div>
+              <h4 id="user-nickname" class="profile-name">Player</h4>
+              <p id="user-uuid" class="profile-uuid">UUID: ...</p>
+              <div class="profile-status-text">Вайтлист активен</div>
             </div>
           </div>
+          <button class="glass-btn danger block" onclick="logout()">Выйти из аккаунта</button>
         </div>
       </div>
     </section>
   </main>
 
+  <div id="toast" class="glass-toast"></div>
   <script src="script.js"></script>
 </body>
 </html>
