@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Подключаем библиотеку SkinView3D для крутого 3D просмотра скина и плаща -->
+  <script src="https://unpkg.com/skinview3d@3.f.iv/bundles/skinview3d.bundle.js"></script>
+
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #05080f 70%);
@@ -157,23 +160,28 @@
     .page-view { display: none; }
     .page-view.active { display: block; }
 
-    /* NameMC Стиль Профиля */
+    /* NameMC 3D Профиль со скином и плащом */
     .namemc-profile-banner {
       background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(7, 11, 18, 0.8)), url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200&auto=format&fit=crop') center/cover;
       border-radius: 20px 20px 0 0; padding: 30px; border-bottom: 1px solid var(--glass-border);
-      position: relative;
     }
     .namemc-profile-content {
-      display: flex; align-items: flex-end; gap: 24px; margin-top: -50px; padding: 0 30px 30px 30px;
+      display: flex; align-items: flex-end; gap: 24px; margin-top: -70px; padding: 0 30px 30px 30px;
       position: relative; z-index: 2; flex-wrap: wrap;
     }
     .namemc-skin-box {
-      background: rgba(5, 8, 15, 0.8); border: 2px solid var(--accent); border-radius: 20px;
-      padding: 16px; display: flex; flex-direction: column; align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+      background: rgba(5, 8, 15, 0.85); border: 2px solid var(--accent); border-radius: 20px;
+      padding: 10px; display: flex; flex-direction: column; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+      width: 160px; height: 240px; justify-content: center; overflow: hidden;
     }
-    .namemc-full-skin { width: 110px; height: auto; image-rendering: pixelated; filter: drop-shadow(0 5px 10px rgba(56,189,248,0.4)); }
-    
+    /* Контейнер для 3Д холста скина */
+    #skin-container canvas {
+      width: 140px !important;
+      height: 220px !important;
+      outline: none;
+    }
+
     .namemc-info h2 { font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
     .namemc-uuid { font-size: 0.8rem; color: var(--text-muted); font-family: monospace; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; }
     
@@ -347,14 +355,14 @@
       </div>
     </div>
 
-    <!-- 4. ЛИЧНЫЙ КАБИНЕТ В СТИЛЕ NAMEMC -->
+    <!-- 4. ЛИЧНЫЙ КАБИНЕТ С 3D СКИНОМ И ПЛАЩОМ -->
     <div id="view-cabinet" class="page-view">
       <div style="max-width: 900px; margin: 40px auto;">
         
         <!-- Если не авторизован -->
         <div class="glass-panel auth-card" id="cabinet-guest">
           <h2 style="margin-bottom: 10px;">Личный кабинет выжившего</h2>
-          <p style="color: var(--text-muted); margin-bottom: 20px;">Для доступа к профилю в стиле NameMC подтвердите свой лицензионный аккаунт Minecraft:</p>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Для доступа к 3D-профилю подтвердите свой лицензионный аккаунт Minecraft:</p>
           <form onsubmit="checkMojangLicense(event)" style="display:flex; flex-direction:column; gap:14px;">
             <input type="text" id="cabinet-username-input" placeholder="Введите ваш ник Minecraft" required class="glass-input" />
             <button type="submit" id="cabinet-verify-btn" class="glass-btn primary block lg">Войти через Mojang API</button>
@@ -362,18 +370,17 @@
           <div id="cabinet-error-banner" class="glass-alert hidden"></div>
         </div>
 
-        <!-- Если авторизован (NameMC Профиль + Настройки) -->
+        <!-- Если авторизован (3D Скин + Плащ + Настройки) -->
         <div class="glass-panel hidden" id="cabinet-user-panel" style="padding: 0; overflow: hidden;">
           
-          <!-- Шапка профиля (как в NameMC) -->
           <div class="namemc-profile-banner">
             <span class="badge-success" style="float: right;">✔ Лицензия подтверждена</span>
           </div>
           
           <div class="namemc-profile-content">
-            <div class="namemc-skin-box">
-              <img id="cabinet-skin-render" src="" alt="Скин" class="namemc-full-skin" />
-            </div>
+            <!-- Контейнер для 3D модельки с плащом -->
+            <div class="namemc-skin-box" id="skin-container"></div>
+            
             <div class="namemc-info">
               <h2 id="cabinet-nickname">Player</h2>
               <span class="namemc-uuid" id="cabinet-uuid">UUID: ...</span>
@@ -381,7 +388,6 @@
             </div>
           </div>
 
-          <!-- Статистика профиля NameMC-style -->
           <div style="padding: 0 30px 30px 30px;">
             <div class="namemc-stats-grid">
               <div class="namemc-stat-card">
@@ -398,7 +404,6 @@
               </div>
             </div>
 
-            <!-- Настройки профиля -->
             <div style="border-top: 1px solid var(--glass-border); padding-top: 24px; margin-top: 24px;">
               <h3 style="font-size: 1.1rem; margin-bottom: 16px;">⚙️ Настройки профиля</h3>
               
@@ -430,6 +435,7 @@
 
   <script>
     const SERVER_IP = 'play.harshwinters.ru';
+    let skinViewer = null;
 
     function switchTab(tabId) {
       document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
@@ -517,6 +523,28 @@
     }
     fetchServerStatus();
 
+    function init3DSkinViewer(username) {
+      const container = document.getElementById('skin-container');
+      container.innerHTML = ''; // Очищаем старый холст
+
+      // Создаем интерактивный 3D просмотрщик скина с поддержкой плаща
+      skinViewer = new skinview3d.SkinViewer({
+        canvas: document.createElement("canvas"),
+        width: 140,
+        height: 220,
+        skin: `https://mc-heads.net/skin/${username}`,
+        cape: `https://mc-heads.net/cape/${username}` // Автоматически подтягивает плащ игрока
+      });
+
+      // Добавляем вращение и анимацию дыхания/ожидания
+      skinViewer.controls.enableRotate = true;
+      skinViewer.controls.enableZoom = false;
+      skinViewer.animation = new skinview3d.WalkingAnimation();
+      skinViewer.animation.speed = 0.5;
+
+      container.appendChild(skinViewer.canvas);
+    }
+
     function renderAuthenticatedUser(user) {
       document.getElementById('guest-card').classList.add('hidden');
       document.getElementById('cabinet-guest').classList.add('hidden');
@@ -524,8 +552,9 @@
 
       document.getElementById('cabinet-nickname').textContent = user.username;
       document.getElementById('cabinet-uuid').textContent = `UUID: ${user.uuid}`;
-      // Используем полный рендер скина (в стиле NameMC)
-      document.getElementById('cabinet-skin-render').src = `https://mc-heads.net/body/${user.uuid}/right`;
+      
+      // Запускаем 3D рендер скина и плаща
+      init3DSkinViewer(user.username);
 
       if (user.discord) document.getElementById('settings-discord').value = user.discord;
       if (user.status) document.getElementById('settings-status').value = user.status;
@@ -576,7 +605,7 @@
       let user = JSON.parse(localStorage.getItem('hw_licensed_user'));
       if (!user) return;
 
-      user.discord = document.getElementById('settings-discord').value.trim();
+      user.discord = document.getElementById('settings-discord-input')?.value || document.getElementById('settings-discord').value.trim();
       user.status = document.getElementById('settings-status').value.trim();
 
       localStorage.setItem('hw_licensed_user', JSON.stringify(user));
