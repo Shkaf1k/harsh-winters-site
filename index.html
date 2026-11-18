@@ -56,7 +56,7 @@
 
     .glass-nav {
       display: flex; align-items: center; justify-content: space-between;
-      width: 100%; max-width: 800px;
+      width: 100%; max-width: 900px;
       background: rgba(13, 27, 42, 0.75); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 999px;
       padding: 10px 20px; box-shadow: var(--glass-shadow);
@@ -78,10 +78,16 @@
     .nav-pill {
       color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
       padding: 6px 18px; border-radius: 999px; transition: all 0.25s ease; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
     }
 
     .nav-pill:hover, .nav-pill.active {
       color: var(--text-main); background: rgba(255, 255, 255, 0.08);
+    }
+
+    .beta-badge {
+      font-size: 0.6rem; background: rgba(56, 189, 248, 0.2); color: var(--accent);
+      padding: 2px 6px; border-radius: 999px; font-weight: 700;
     }
 
     /* Кнопки */
@@ -96,12 +102,14 @@
     .glass-btn:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-hover); transform: translateY(-2px); }
     .glass-btn.primary { background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.1)); border-color: rgba(56, 189, 248, 0.4); color: #bae6fd; }
     .glass-btn.lg { padding: 14px 28px; font-size: 1rem; }
+    .glass-btn.block { width: 100%; }
 
     /* Панели */
     .glass-panel {
       background: var(--glass-bg); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 24px; padding: 28px;
       box-shadow: var(--glass-shadow);
+      margin-bottom: 30px;
     }
 
     /* Баннер */
@@ -148,6 +156,26 @@
     .info-card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
     .info-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
 
+    /* Стили для форума */
+    .forum-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
+    .glass-input, .glass-textarea {
+      background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border);
+      padding: 12px 16px; border-radius: 14px; color: var(--text-main);
+      font-family: inherit; font-size: 0.95netrem; outline: none; width: 100%; transition: 0.3s;
+    }
+    .glass-textarea { resize: vertical; min-height: 100px; }
+    .glass-input:focus, .glass-textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+
+    .forum-post {
+      background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
+      border-radius: 18px; padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px);
+    }
+    .forum-post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .forum-author { font-weight: 700; color: var(--accent); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .forum-date { font-size: 0.75rem; color: var(--text-muted); }
+    .forum-text { color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px; }
+    .forum-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 10px; }
+
     .glass-toast {
       position: fixed; bottom: 24px; right: 24px;
       background: rgba(13, 27, 42, 0.9); backdrop-filter: blur(16px);
@@ -178,6 +206,7 @@
         <a class="nav-pill active" onclick="switchTab('home')" id="nav-home">Главная</a>
         <a class="nav-pill" onclick="switchTab('assembly')" id="nav-assembly">Сборка</a>
         <a class="nav-pill" onclick="switchTab('rules')" id="nav-rules">Правила</a>
+        <a class="nav-pill" onclick="switchTab('forum')" id="nav-forum">Форум <span class="beta-badge">BETA</span></a>
       </div>
     </nav>
   </header>
@@ -206,7 +235,6 @@
         </div>
       </section>
 
-      <!-- Статус сервера -->
       <div class="glass-panel status-panel">
         <div class="status-info">
           <span class="pulse-dot" id="status-dot"></span>
@@ -224,7 +252,7 @@
         </div>
       </div>
 
-      <div class="glass-panel" style="margin-bottom: 50px;">
+      <div class="glass-panel">
         <h2 style="margin-bottom: 14px; font-size: 1.4rem;" class="gradient-text">О СЕРВЕРЕ</h2>
         <p style="color: var(--text-muted); line-height: 1.7; font-size: 1rem;">
           Harsh Winters — это атмосферный сервер с уклоном в выживание и хардкор. Здесь важны командная работа, постройка защищенных убежищ и грамотное распределение ресурсов. Исследуйте заснеженные биомы, создавайте механизированные базы и сражайтесь с суровой природой.
@@ -234,7 +262,7 @@
 
     <!-- 2. СТРАНИЦА СБОРКИ -->
     <div id="view-assembly" class="page-view">
-      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
+      <div class="glass-panel" style="margin-top: 40px;">
         <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Сборка Harsh Winters 1.0.0</h2>
         <p style="color: var(--text-muted); margin-bottom: 24px;">Основные модификации, формирующие уникальный зимний игровой процесс.</p>
         
@@ -261,7 +289,7 @@
 
     <!-- 3. СТРАНИЦА ПРАВИЛ -->
     <div id="view-rules" class="page-view">
-      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
+      <div class="glass-panel" style="margin-top: 40px;">
         <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Правила сервера</h2>
         <p style="color: var(--text-muted); margin-bottom: 24px;">Соблюдение регламента гарантирует комфортную и честную игру для каждого.</p>
         
@@ -278,6 +306,29 @@
             <h3>3. Поведение в чате</h3>
             <p>Оскорбления игроков, токсичность, спам и реклама сторонних проектов строго запрещены.</p>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ФОРУМ / ИСТОРИИ [BETA] -->
+    <div id="view-forum" class="page-view">
+      <div class="glass-panel" style="margin-top: 40px;">
+        <h2 style="font-size: 2rem; margin-bottom: 6px;" class="gradient-text">Форум выживших <span class="beta-badge">BETA</span></h2>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">Делитесь скриншотами своих баз, историями спасения от метели и приключениями.</p>
+        
+        <!-- Форма добавления поста -->
+        <form onsubmit="handleForumPost(event)" class="forum-form">
+          <input type="text" id="forum-author" placeholder="Ваш ник в игре" required class="glass-input" />
+          <textarea id="forum-text" placeholder="Расскажите историю или опишите свой скриншот..." required class="glass-textarea"></textarea>
+          <input type="url" id="forum-img" placeholder="Ссылка на картинку/скриншот (необязательно, например с Imgur)" class="glass-input" />
+          <button type="submit" class="glass-btn primary">Опубликовать историю</button>
+        </form>
+
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 30px 0;" />
+
+        <!-- Лента постов -->
+        <div id="forum-posts-container">
+          <!-- Сюда динамически добавляются посты -->
         </div>
       </div>
     </div>
@@ -302,6 +353,9 @@
       } else if (tabId === 'rules') {
         document.getElementById('view-rules').classList.add('active');
         document.getElementById('nav-rules').classList.add('active');
+      } else if (tabId === 'forum') {
+        document.getElementById('view-forum').classList.add('active');
+        document.getElementById('nav-forum').classList.add('active');
       }
       window.scrollTo(0, 0);
     }
@@ -371,6 +425,69 @@
       }
     }
     fetchServerStatus();
+
+    // Логика форума (сохранение в localStorage)
+    function loadForumPosts() {
+      const container = document.getElementById('forum-posts-container');
+      let posts = JSON.parse(localStorage.getItem('hw_forum_posts') || '[]');
+      
+      // Дефолтный пост для примера, если лента пуста
+      if (posts.length === 0) {
+        posts = [
+          {
+            author: 'NordicWolf',
+            text: 'Построил первую тепловую станцию под землей, теперь не страшно выходить во время метели! Всем советую запасаться углем.',
+            image: '',
+            date: 'Сегодня, 14:20'
+          }
+        ];
+        localStorage.setItem('hw_forum_posts', JSON.stringify(posts));
+      }
+
+      container.innerHTML = posts.map(p => `
+        <div class="forum-post">
+          <div class="forum-post-header">
+            <span class="forum-author">👤 ${escapeHtml(p.author)}</span>
+            <span class="forum-date">${escapeHtml(p.date)}</span>
+          </div>
+          <div class="forum-text">${escapeHtml(p.text)}</div>
+          ${p.image ? `<img src="${escapeHtml(p.image)}" class="forum-img" alt="Скриншот игрока" onerror="this.style.display='none'">` : ''}
+        </div>
+      `).join('');
+    }
+
+    function handleForumPost(event) {
+      event.preventDefault();
+      const author = document.getElementById('forum-author').value.trim();
+      const text = document.getElementById('forum-text').value.trim();
+      const image = document.getElementById('forum-img').value.trim();
+
+      if (!author || !text) return;
+
+      const newPost = {
+        author,
+        text,
+        image,
+        date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) + ', ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      let posts = JSON.parse(localStorage.getItem('hw_forum_posts') || '[]');
+      posts.unshift(newPost); // Добавляем в начало
+      localStorage.setItem('hw_forum_posts', JSON.stringify(posts));
+
+      document.getElementById('forum-text').value = '';
+      document.getElementById('forum-img').value = '';
+      
+      loadForumPosts();
+      showToast('✔ Ваша история успешно опубликована!');
+    }
+
+    // Защита от кривого ввода
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    loadForumPosts();
   </script>
 </body>
 </html>
