@@ -59,7 +59,7 @@
 
     .glass-nav {
       display: flex; align-items: center; justify-content: space-between;
-      width: 100%; max-width: 900px;
+      width: 100%; max-width: 950px;
       background: rgba(13, 27, 42, 0.75); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 999px;
       padding: 10px 20px; box-shadow: var(--glass-shadow);
@@ -76,11 +76,12 @@
       display: flex; gap: 4px;
       background: rgba(0, 0, 0, 0.25);
       padding: 4px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.04);
+      flex-wrap: wrap; justify-content: center;
     }
 
     .nav-pill {
       color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
-      padding: 6px 16px; border-radius: 999px; transition: all 0.25s ease; cursor: pointer;
+      padding: 6px 14px; border-radius: 999px; transition: all 0.25s ease; cursor: pointer;
       display: flex; align-items: center; gap: 6px;
     }
 
@@ -138,7 +139,6 @@
     .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
     .copy-tag { font-size: 0.72rem; background: rgba(0, 0, 0, 0.4); padding: 2px 8px; border-radius: 6px; color: var(--text-muted); }
 
-    /* Плеер эмбиента */
     .ambient-player {
       display: inline-flex; align-items: center; gap: 10px;
       background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);
@@ -166,6 +166,38 @@
     .info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); }
     .info-card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
     .info-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
+
+    /* Галерея скриншотов */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+    .gallery-item {
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border);
+      cursor: pointer; position: relative; height: 180px; background: rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-item:hover { border-color: var(--accent); box-shadow: 0 8px 24px var(--accent-glow); }
+
+    /* Lightbox модальное окно */
+    .lightbox-modal {
+      position: fixed; inset: 0; background: rgba(5, 8, 15, 0.85); backdrop-filter: blur(16px);
+      z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .lightbox-modal.active { opacity: 1; pointer-events: auto; }
+    .lightbox-content {
+      max-width: 900px; width: 100%; max-height: 85vh; border-radius: 20px;
+      overflow: hidden; border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; background: #000;
+    }
+    .lightbox-content img { width: 100%; height: auto; max-height: 75vh; display: block; object-fit: contain; }
+    .lightbox-caption { padding: 16px; background: rgba(13, 27, 42, 0.9); font-size: 0.95rem; color: var(--text-main); font-weight: 600; text-align: center; }
+    .lightbox-close {
+      position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border);
+      color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 10;
+    }
+    .lightbox-close:hover { background: var(--accent); color: #000; }
 
     /* Дорожная карта (Roadmap) */
     .roadmap-list { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
@@ -202,7 +234,7 @@
     .forum-author { font-weight: 700; color: var(--accent); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
     .forum-date { font-size: 0.75rem; color: var(--text-muted); }
     .forum-text { color: var(--text-main); font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px; }
-    .forum-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 10px; }
+    .forum-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 10px; cursor: pointer; }
 
     .glass-toast {
       position: fixed; bottom: 24px; right: 24px;
@@ -234,6 +266,7 @@
         <a class="nav-pill active" onclick="switchTab('home')" id="nav-home">Главная</a>
         <a class="nav-pill" onclick="switchTab('assembly')" id="nav-assembly">Сборка</a>
         <a class="nav-pill" onclick="switchTab('rules')" id="nav-rules">Правила</a>
+        <a class="nav-pill" onclick="switchTab('gallery')" id="nav-gallery">Галерея</a>
         <a class="nav-pill" onclick="switchTab('team')" id="nav-team">Команда</a>
         <a class="nav-pill" onclick="switchTab('forum')" id="nav-forum">Форум <span class="beta-badge">BETA</span></a>
       </div>
@@ -266,7 +299,6 @@
         </div>
       </section>
 
-      <!-- Статус сервера -->
       <div class="glass-panel status-panel">
         <div class="status-info">
           <span class="pulse-dot" id="status-dot"></span>
@@ -284,7 +316,6 @@
         </div>
       </div>
 
-      <!-- Дорожная карта (Roadmap) -->
       <div class="glass-panel" style="margin-bottom: 50px;">
         <h2 style="margin-bottom: 6px; font-size: 1.4rem;" class="gradient-text">🗺️ Дорожная карта проекта</h2>
         <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Этапы разработки и запуска нашего хардкорного сервера.</p>
@@ -365,7 +396,30 @@
       </div>
     </div>
 
-    <!-- 4. КОМАНДА ПРОЕКТА (3D Скины) -->
+    <!-- 4. ГАЛЕРЕЯ С КАРТИНКАМИ И LIGHTBOX -->
+    <div id="view-gallery" class="page-view">
+      <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
+        <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Галерея мира Harsh Winters</h2>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">Нажмите на любой скриншот, чтобы открыть его в высоком разрешении.</p>
+        
+        <div class="gallery-grid">
+          <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1517299321609-52687d1bc55a?q=80&w=1200&auto=format&fit=crop', 'Суровая ледяная буря в северном биоме')">
+            <img src="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?q=80&w=600&auto=format&fit=crop" alt="Метель">
+          </div>
+          <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=80&w=1200&auto=format&fit=crop', 'Заброшенная база инженеров (Mod: Create)')">
+            <img src="https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=80&w=600&auto=format&fit=crop" alt="База">
+          </div>
+          <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200&auto=format&fit=crop', 'Ночной морозный лес под светом луны')">
+            <img src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=600&auto=format&fit=crop" alt="Лес">
+          </div>
+          <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?q=80&w=1200&auto=format&fit=crop', 'Тепловой генератор и выживание у костра')">
+            <img src="https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?q=80&w=600&auto=format&fit=crop" alt="Костер">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. КОМАНДА ПРОЕКТА (3D Скины) -->
     <div id="view-team" class="page-view">
       <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
         <h2 style="font-size: 2rem; margin-bottom: 10px;" class="gradient-text">Команда проекта</h2>
@@ -386,7 +440,7 @@
       </div>
     </div>
 
-    <!-- 5. ФОРУМ / ИСТОРИИ [BETA] -->
+    <!-- 6. ФОРУМ / ИСТОРИИ [BETA] -->
     <div id="view-forum" class="page-view">
       <div class="glass-panel" style="margin-top: 40px; margin-bottom: 50px;">
         <h2 style="font-size: 2rem; margin-bottom: 6px;" class="gradient-text">Форум выживших <span class="beta-badge">BETA</span></h2>
@@ -407,9 +461,17 @@
 
   </main>
 
+  <!-- Lightbox Модальное окно -->
+  <div class="lightbox-modal" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      <img id="lightbox-img" src="" alt="Увеличенный скриншот">
+      <div class="lightbox-caption" id="lightbox-caption">Описание скриншота</div>
+    </div>
+  </div>
+
   <div id="toast" class="glass-toast"></div>
 
-  <!-- Скрытый аудиоэлемент для атмосферного эмбиента (белый шум / зимняя метель) -->
   <audio id="ambient-audio" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13348f9.mp3?filename=wind-howling-10499.mp3" type="audio/mpeg">
   </audio>
@@ -417,6 +479,17 @@
   <script>
     const SERVER_IP = 'play.harshwinters.ru';
     let isAudioPlaying = false;
+
+    // Lightbox функции
+    function openLightbox(url, caption) {
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('lightbox-caption').textContent = caption;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
 
     function toggleAmbientAudio() {
       const audio = document.getElementById('ambient-audio');
@@ -447,10 +520,13 @@
       } else if (tabId === 'rules') {
         document.getElementById('view-rules').classList.add('active');
         document.getElementById('nav-rules').classList.add('active');
+      } else if (tabId === 'gallery') {
+        document.getElementById('view-gallery').classList.add('active');
+        document.getElementById('nav-gallery').classList.add('active');
       } else if (tabId === 'team') {
         document.getElementById('view-team').classList.add('active');
         document.getElementById('nav-team').classList.add('active');
-        initTeamSkins(); // Рендерим 3D скины команды при открытии вкладки
+        initTeamSkins();
       } else if (tabId === 'forum') {
         document.getElementById('view-forum').classList.add('active');
         document.getElementById('nav-forum').classList.add('active');
@@ -458,7 +534,6 @@
       window.scrollTo(0, 0);
     }
 
-    // Рендер 3D скинов команды
     let teamRendered = false;
     function initTeamSkins() {
       if (teamRendered) return;
@@ -580,7 +655,7 @@
             <span class="forum-date">${escapeHtml(p.date)}</span>
           </div>
           <div class="forum-text">${escapeHtml(p.text)}</div>
-          ${p.image ? `<img src="${escapeHtml(p.image)}" class="forum-img" alt="Скриншот игрока" onerror="this.style.display='none'">` : ''}
+          ${p.image ? `<img src="${escapeHtml(p.image)}" class="forum-img" alt="Скриншот игрока" onclick="openLightbox('${escapeHtml(p.image)}', 'Скриншот от ${escapeHtml(p.author)}')" onerror="this.style.display='none'">` : ''}
         </div>
       `).join('');
     }
