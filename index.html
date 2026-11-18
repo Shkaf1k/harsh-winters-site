@@ -7,12 +7,247 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #05080f 70%);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-bg-hover: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-hover: rgba(56, 189, 248, 0.3);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #05080f;
+      background-image: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .floating-nav-container {
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    .glass-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1000px;
+      background: rgba(13, 27, 42, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 10px 20px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .logo-icon { font-size: 1.2rem; filter: drop-shadow(0 0 8px var(--accent)); }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-pill {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 999px;
+      transition: all 0.25s ease;
+    }
+
+    .nav-pill:hover, .nav-pill.active {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-btn {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .glass-btn:hover {
+      background: var(--glass-bg-hover);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-2px);
+    }
+
+    .glass-btn.primary {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.1));
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #bae6fd;
+    }
+
+    .glass-btn.sm { padding: 6px 14px; font-size: 0.8rem; }
+    .glass-btn.lg { padding: 14px 28px; font-size: 1rem; }
+    .glass-btn.block { width: 100%; }
+    .glass-btn.danger { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .hero {
+      padding: 60px 0;
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .season-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .dot-live {
+      width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      70% { transform: scale(1.4); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .hero-title { font-size: 2.8rem; line-height: 1.1; font-weight: 700; margin-bottom: 16px; }
+    .gradient-text { background: linear-gradient(90deg, #7dd3fc, #38bdf8, #bae6fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-subtitle { color: var(--text-muted); font-size: 1.02rem; line-height: 1.6; margin-bottom: 28px; }
+    .hero-actions { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+    .copy-tag { font-size: 0.72rem; background: rgba(0, 0, 0, 0.3); padding: 2px 8px; border-radius: 6px; color: var(--text-muted); }
+
+    .status-panel { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-radius: 18px; flex-wrap: wrap; gap: 14px; }
+    .status-info { display: flex; align-items: center; gap: 12px; }
+    .pulse-dot { width: 12px; height: 12px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
+    .status-title { font-weight: 600; font-size: 0.95rem; }
+    .status-sub { font-size: 0.75rem; color: var(--text-muted); }
+    .status-metrics { display: flex; align-items: center; gap: 16px; }
+    .metric { display: flex; flex-direction: column; align-items: center; font-weight: 700; font-size: 1rem; }
+    .metric small { font-size: 0.7rem; color: var(--text-muted); font-weight: 400; }
+    .temp { color: var(--accent); }
+    .metric-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.1); }
+
+    .auth-card h3 { font-size: 1.1rem; margin-bottom: 8px; font-weight: 700; }
+    .card-desc { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.5; }
+    .auth-form { display: flex; flex-direction: column; gap: 12px; }
+    .glass-input {
+      background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-border);
+      padding: 12px 16px; border-radius: 14px; color: var(--text-main);
+      font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.3s;
+    }
+    .glass-input:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+    .glass-alert { margin-top: 14px; padding: 12px; border-radius: 12px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; font-size: 0.85rem; }
+
+    .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success); font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+    .profile-body { display: flex; align-items: center; gap: 16px; background: rgba(0, 0, 0, 0.2); padding: 14px; border-radius: 16px; margin-bottom: 16px; }
+    .skin-img { width: 54px; height: auto; }
+    .profile-name { font-size: 1.2rem; color: var(--accent); margin-bottom: 2px; }
+    .profile-uuid { font-size: 0.7rem; color: var(--text-muted); word-break: break-all; margin-bottom: 6px; }
+    .profile-status-text { font-size: 0.78rem; color: var(--success); }
+
+    .glass-toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: rgba(13, 27, 42, 0.85); backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); color: var(--text-main);
+      padding: 12px 20px; border-radius: 14px; box-shadow: var(--glass-shadow);
+      z-index: 999; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 0.9rem;
+    }
+    .glass-toast.show { transform: translateY(0); }
+    .hidden { display: none !important; }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; padding: 30px 0; }
+      .hero-title { font-size: 2.2rem; }
+    }
+  </style>
 </head>
 <body>
   <canvas id="snow-canvas"></canvas>
 
-  <!-- Плавающая стеклянная навигация (Glass Navbar) -->
   <header class="floating-nav-container">
     <nav class="glass-nav">
       <a href="#" class="nav-logo">
@@ -21,9 +256,8 @@
       </a>
       
       <div class="nav-links">
-        <a href="#features" class="nav-pill active">О сборке</a>
-        <a href="#mods" class="nav-pill">Моды</a>
-        <a href="#install" class="nav-pill">Установка</a>
+        <a href="#" class="nav-pill active">Главная</a>
+        <a href="#install" class="nav-pill">Сборка</a>
         <a href="#rules" class="nav-pill">Правила</a>
       </div>
 
@@ -52,7 +286,6 @@
           <a href="#install" class="glass-btn lg">Скачать модпак</a>
         </div>
 
-        <!-- Статус сервера -->
         <div class="glass-panel status-panel">
           <div class="status-info">
             <span class="pulse-dot" id="status-dot"></span>
@@ -71,7 +304,6 @@
         </div>
       </div>
 
-      <!-- Блок авторизации / Личный кабинет -->
       <div class="hero-sidebar">
         <div class="glass-panel auth-card" id="guest-card">
           <h3>ЛИЧНЫЙ КАБИНЕТ</h3>
